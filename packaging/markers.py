@@ -1,7 +1,6 @@
 # This file is dual licensed under the terms of the Apache License, Version
 # 2.0, and the BSD License. See the LICENSE file in the root of this repository
 # for complete details.
-from __future__ import absolute_import, division, print_function
 
 import operator
 import os
@@ -20,7 +19,6 @@ from pyparsing import (  # noqa: N817
     stringStart,
 )
 
-from ._compat import string_types
 from ._typing import TYPE_CHECKING
 from .specifiers import InvalidSpecifier, Specifier
 
@@ -58,7 +56,7 @@ class UndefinedEnvironmentName(ValueError):
     """
 
 
-class Node(object):
+class Node:
     def __init__(self, value):
         # type: (Any) -> None
         self.value = value
@@ -162,7 +160,7 @@ def _coerce_parse_result(results):
 def _format_marker(marker, first=True):
     # type: (Union[List[str], Tuple[Node, ...], str], Optional[bool]) -> str
 
-    assert isinstance(marker, (list, tuple, string_types))
+    assert isinstance(marker, (list, tuple, str))
 
     # Sometimes we have a structure like [[...]] which is a single item list
     # where the single item is itself it's own list. In that case we want skip
@@ -217,7 +215,7 @@ def _eval_op(lhs, op, rhs):
     return oper(lhs, rhs)
 
 
-class Undefined(object):
+class Undefined:
     pass
 
 
@@ -241,7 +239,7 @@ def _evaluate_markers(markers, environment):
     groups = [[]]  # type: List[List[bool]]
 
     for marker in markers:
-        assert isinstance(marker, (list, tuple, string_types))
+        assert isinstance(marker, (list, tuple, str))
 
         if isinstance(marker, list):
             groups[-1].append(_evaluate_markers(marker, environment))
@@ -275,16 +273,8 @@ def format_full_version(info):
 
 def default_environment():
     # type: () -> Dict[str, str]
-    if hasattr(sys, "implementation"):
-        # Ignoring the `sys.implementation` reference for type checking due to
-        # mypy not liking that the attribute doesn't exist in Python 2.7 when
-        # run with the `--py27` flag.
-        iver = format_full_version(sys.implementation.version)  # type: ignore
-        implementation_name = sys.implementation.name  # type: ignore
-    else:
-        iver = "0"
-        implementation_name = ""
-
+    iver = format_full_version(sys.implementation.version)
+    implementation_name = sys.implementation.name
     return {
         "implementation_name": implementation_name,
         "implementation_version": iver,
@@ -300,7 +290,7 @@ def default_environment():
     }
 
 
-class Marker(object):
+class Marker:
     def __init__(self, marker):
         # type: (str) -> None
         try:

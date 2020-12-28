@@ -2,10 +2,8 @@
 # 2.0, and the BSD License. See the LICENSE file in the root of this repository
 # for complete details.
 
-try:
-    import collections.abc as collections_abc
-except ImportError:
-    import collections as collections_abc
+
+import collections.abc
 
 try:
     import ctypes
@@ -43,13 +41,7 @@ def manylinux_module(monkeypatch):
 @pytest.fixture
 def mock_interpreter_name(monkeypatch):
     def mock(name):
-        if hasattr(sys, "implementation") and sys.implementation.name != name.lower():
-            monkeypatch.setattr(sys.implementation, "name", name.lower())
-            return True
-        elif platform.python_implementation() != name:
-            monkeypatch.setattr(platform, "python_implementation", lambda: name)
-            return True
-        return False
+        monkeypatch.setattr(sys.implementation, "name", name.lower())
 
     return mock
 
@@ -146,19 +138,13 @@ class TestParseTag:
 
 class TestInterpreterName:
     def test_sys_implementation_name(self, monkeypatch):
-        class MockImplementation(object):
+        class MockImplementation:
             pass
 
         mock_implementation = MockImplementation()
         mock_implementation.name = "sillywalk"
         monkeypatch.setattr(sys, "implementation", mock_implementation, raising=False)
         assert tags.interpreter_name() == "sillywalk"
-
-    def test_platform(self, monkeypatch):
-        monkeypatch.delattr(sys, "implementation", raising=False)
-        name = "SillyWalk"
-        monkeypatch.setattr(platform, "python_implementation", lambda: name)
-        assert tags.interpreter_name() == name.lower()
 
     def test_interpreter_short_names(self, mock_interpreter_name, monkeypatch):
         mock_interpreter_name("cpython")
@@ -167,7 +153,7 @@ class TestInterpreterName:
 
 class TestInterpreterVersion:
     def test_warn(self, monkeypatch):
-        class MockConfigVar(object):
+        class MockConfigVar:
             def __init__(self, return_):
                 self.warn = None
                 self._return = return_
@@ -817,7 +803,7 @@ class TestCPythonTags:
         result_iterator = tags.cpython_tags(
             (3, 8), ["cp38d", "cp38"], ["plat1", "plat2"]
         )
-        assert isinstance(result_iterator, collections_abc.Iterator)
+        assert isinstance(result_iterator, collections.abc.Iterator)
 
     def test_all_args(self):
         result_iterator = tags.cpython_tags(
@@ -993,7 +979,7 @@ class TestGenericTags:
 
     def test_iterator_returned(self):
         result_iterator = tags.generic_tags("sillywalk33", ["abi"], ["plat1", "plat2"])
-        assert isinstance(result_iterator, collections_abc.Iterator)
+        assert isinstance(result_iterator, collections.abc.Iterator)
 
     def test_all_args(self):
         result_iterator = tags.generic_tags("sillywalk33", ["abi"], ["plat1", "plat2"])
@@ -1196,11 +1182,11 @@ class TestSysTags:
         assert tags.interpreter_name() == expected
 
     def test_iterator(self):
-        assert isinstance(tags.sys_tags(), collections_abc.Iterator)
+        assert isinstance(tags.sys_tags(), collections.abc.Iterator)
 
     def test_mac_cpython(self, mock_interpreter_name, monkeypatch):
-        if mock_interpreter_name("CPython"):
-            monkeypatch.setattr(tags, "_cpython_abis", lambda *a: ["cp33m"])
+        mock_interpreter_name("CPython")
+        monkeypatch.setattr(tags, "_cpython_abis", lambda *a: ["cp33m"])
         if platform.system() != "Darwin":
             monkeypatch.setattr(platform, "system", lambda: "Darwin")
             monkeypatch.setattr(tags, "mac_platforms", lambda: ["macosx_10_5_x86_64"])
@@ -1216,8 +1202,8 @@ class TestSysTags:
         )
 
     def test_windows_cpython(self, mock_interpreter_name, monkeypatch):
-        if mock_interpreter_name("CPython"):
-            monkeypatch.setattr(tags, "_cpython_abis", lambda *a: ["cp33m"])
+        mock_interpreter_name("CPython")
+        monkeypatch.setattr(tags, "_cpython_abis", lambda *a: ["cp33m"])
         if platform.system() != "Windows":
             monkeypatch.setattr(platform, "system", lambda: "Windows")
             monkeypatch.setattr(tags, "_generic_platforms", lambda: ["win_amd64"])
@@ -1234,8 +1220,8 @@ class TestSysTags:
         assert result[-1] == expected
 
     def test_linux_cpython(self, mock_interpreter_name, monkeypatch):
-        if mock_interpreter_name("CPython"):
-            monkeypatch.setattr(tags, "_cpython_abis", lambda *a: ["cp33m"])
+        mock_interpreter_name("CPython")
+        monkeypatch.setattr(tags, "_cpython_abis", lambda *a: ["cp33m"])
         if platform.system() != "Linux":
             monkeypatch.setattr(platform, "system", lambda: "Linux")
             monkeypatch.setattr(tags, "_linux_platforms", lambda: ["linux_x86_64"])

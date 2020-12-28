@@ -2,18 +2,8 @@
 # 2.0, and the BSD License. See the LICENSE file in the root of this repository
 # for complete details.
 
-from __future__ import absolute_import
-
-import distutils.util
-
-try:
-    from importlib.machinery import EXTENSION_SUFFIXES
-except ImportError:  # pragma: no cover
-    import imp
-
-    EXTENSION_SUFFIXES = [x[0] for x in imp.get_suffixes()]
-    del imp
 import collections
+import distutils.util
 import logging
 import os
 import platform
@@ -22,6 +12,7 @@ import struct
 import sys
 import sysconfig
 import warnings
+from importlib.machinery import EXTENSION_SUFFIXES
 
 from ._typing import TYPE_CHECKING, cast
 
@@ -76,7 +67,7 @@ _LAST_GLIBC_MINOR = collections.defaultdict(lambda: 50)  # type: Dict[int, int]
 glibcVersion = collections.namedtuple("Version", ["major", "minor"])
 
 
-class Tag(object):
+class Tag:
     """
     A representation of the tag triple for a wheel.
 
@@ -616,7 +607,7 @@ def _get_glibc_version():
 # identify the architecture of the running executable in some cases, so we
 # determine it dynamically by reading the information from the running
 # process. This only applies on Linux, which uses the ELF format.
-class _ELFFileHeader(object):
+class _ELFFileHeader:
     # https://en.wikipedia.org/wiki/Executable_and_Linkable_Format#File_header
     class _InvalidELFFileHeader(ValueError):
         """
@@ -803,11 +794,7 @@ def interpreter_name():
     """
     Returns the name of the running interpreter.
     """
-    try:
-        name = sys.implementation.name  # type: ignore
-    except AttributeError:  # pragma: no cover
-        # Python 2.7 compatibility.
-        name = platform.python_implementation().lower()
+    name = sys.implementation.name
     return INTERPRETER_SHORT_NAMES.get(name) or name
 
 
