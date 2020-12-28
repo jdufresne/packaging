@@ -417,7 +417,7 @@ def mac_platforms(version=None, arch=None):
     generate platform tags for. Both parameters default to the appropriate value
     for the current system.
     """
-    version_str, _, cpu_arch = platform.mac_ver()  # type: ignore
+    version_str, _, cpu_arch = platform.mac_ver()
     if version is None:
         version = cast("MacVersion", tuple(map(int, version_str.split(".")[:2])))
     else:
@@ -512,9 +512,7 @@ def _glibc_version_string_confstr():
     # https://github.com/python/cpython/blob/fcf1d003bf4f0100c9d0921ff3d70e1127ca1b71/Lib/platform.py#L175-L183
     try:
         # os.confstr("CS_GNU_LIBC_VERSION") returns a string like "glibc 2.17".
-        version_string = os.confstr(  # type: ignore[attr-defined] # noqa: F821
-            "CS_GNU_LIBC_VERSION"
-        )
+        version_string = os.confstr("CS_GNU_LIBC_VERSION")
         assert version_string is not None
         _, version = version_string.split()  # type: Tuple[str, str]
     except (AssertionError, AttributeError, OSError, ValueError):
@@ -547,8 +545,7 @@ def _glibc_version_string_ctypes():
     # hard code here. In any case, failure to call dlopen() means we
     # can proceed, so we bail on our attempt.
     try:
-        # Note: typeshed is wrong here so we are ignoring this line.
-        process_namespace = ctypes.CDLL(None)  # type: ignore
+        process_namespace = ctypes.CDLL(None)
     except OSError:
         return None
 
