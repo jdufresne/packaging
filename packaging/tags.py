@@ -13,28 +13,25 @@ import sys
 import sysconfig
 import warnings
 from importlib.machinery import EXTENSION_SUFFIXES
-from typing import TYPE_CHECKING, cast
-
-if TYPE_CHECKING:  # pragma: no cover
-    from typing import (
-        IO,
-        Dict,
-        FrozenSet,
-        Iterable,
-        Iterator,
-        List,
-        Optional,
-        Sequence,
-        Tuple,
-        Union,
-    )
-
-    PythonVersion = Sequence[int]
-    MacVersion = Tuple[int, int]
-    GlibcVersion = Tuple[int, int]
-
+from typing import (
+    IO,
+    Dict,
+    FrozenSet,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Union,
+    cast,
+)
 
 logger = logging.getLogger(__name__)
+
+PythonVersion = Sequence[int]
+MacVersion = Tuple[int, int]
+GlibcVersion = Tuple[int, int]
 
 INTERPRETER_SHORT_NAMES = {
     "python": "py",  # Generic.

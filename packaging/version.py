@@ -6,39 +6,33 @@ import collections
 import itertools
 import re
 import warnings
-from typing import TYPE_CHECKING
+from typing import Callable, Iterator, List, Optional, SupportsInt, Tuple, Union
 
-from ._structures import Infinity, NegativeInfinity
-
-if TYPE_CHECKING:  # pragma: no cover
-    from typing import Callable, Iterator, List, Optional, SupportsInt, Tuple, Union
-
-    from ._structures import InfinityType, NegativeInfinityType
-
-    InfiniteTypes = Union[InfinityType, NegativeInfinityType]
-    PrePostDevType = Union[InfiniteTypes, Tuple[str, int]]
-    SubLocalType = Union[InfiniteTypes, int, str]
-    LocalType = Union[
-        NegativeInfinityType,
-        Tuple[
-            Union[
-                SubLocalType,
-                Tuple[SubLocalType, str],
-                Tuple[NegativeInfinityType, SubLocalType],
-            ],
-            ...,
-        ],
-    ]
-    CmpKey = Tuple[
-        int, Tuple[int, ...], PrePostDevType, PrePostDevType, PrePostDevType, LocalType
-    ]
-    LegacyCmpKey = Tuple[int, Tuple[str, ...]]
-    VersionComparisonMethod = Callable[
-        [Union[CmpKey, LegacyCmpKey], Union[CmpKey, LegacyCmpKey]], bool
-    ]
+from ._structures import Infinity, InfinityType, NegativeInfinity, NegativeInfinityType
 
 __all__ = ["parse", "Version", "LegacyVersion", "InvalidVersion", "VERSION_PATTERN"]
 
+InfiniteTypes = Union[InfinityType, NegativeInfinityType]
+PrePostDevType = Union[InfiniteTypes, Tuple[str, int]]
+SubLocalType = Union[InfiniteTypes, int, str]
+LocalType = Union[
+    NegativeInfinityType,
+    Tuple[
+        Union[
+            SubLocalType,
+            Tuple[SubLocalType, str],
+            Tuple[NegativeInfinityType, SubLocalType],
+        ],
+        ...,
+    ],
+]
+CmpKey = Tuple[
+    int, Tuple[int, ...], PrePostDevType, PrePostDevType, PrePostDevType, LocalType
+]
+LegacyCmpKey = Tuple[int, Tuple[str, ...]]
+VersionComparisonMethod = Callable[
+    [Union[CmpKey, LegacyCmpKey], Union[CmpKey, LegacyCmpKey]], bool
+]
 
 _Version = collections.namedtuple(
     "_Version", ["epoch", "release", "dev", "pre", "post", "local"]

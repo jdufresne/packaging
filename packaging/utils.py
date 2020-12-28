@@ -3,16 +3,11 @@
 # for complete details.
 
 import re
-from typing import TYPE_CHECKING, cast
+from typing import NewType, Union, cast
 
 from .version import InvalidVersion, Version
 
-if TYPE_CHECKING:  # pragma: no cover
-    from typing import NewType, Union
-
-    NormalizedName = NewType("NormalizedName", str)
-else:
-    NormalizedName = str
+NormalizedName = NewType("NormalizedName", str)
 
 _canonicalize_regex = re.compile(r"[-_.]+")
 

@@ -6,7 +6,7 @@ import operator
 import os
 import platform
 import sys
-from typing import TYPE_CHECKING
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 from pyparsing import (  # noqa: N817
     Forward,
@@ -22,12 +22,6 @@ from pyparsing import (  # noqa: N817
 
 from .specifiers import InvalidSpecifier, Specifier
 
-if TYPE_CHECKING:  # pragma: no cover
-    from typing import Any, Callable, Dict, List, Optional, Tuple, Union
-
-    Operator = Callable[[str, str], bool]
-
-
 __all__ = [
     "InvalidMarker",
     "UndefinedComparison",
@@ -35,6 +29,8 @@ __all__ = [
     "Marker",
     "default_environment",
 ]
+
+Operator = Callable[[str, str], bool]
 
 
 class InvalidMarker(ValueError):

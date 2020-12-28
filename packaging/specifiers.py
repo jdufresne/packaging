@@ -7,27 +7,14 @@ import functools
 import itertools
 import re
 import warnings
-from typing import TYPE_CHECKING
+from typing import Callable, Dict, Iterable, Iterator, List, Optional, Set, Tuple, Union
 
 from .utils import canonicalize_version
 from .version import LegacyVersion, Version, parse
 
-if TYPE_CHECKING:  # pragma: no cover
-    from typing import (
-        Callable,
-        Dict,
-        Iterable,
-        Iterator,
-        List,
-        Optional,
-        Set,
-        Tuple,
-        Union,
-    )
-
-    ParsedVersion = Union[Version, LegacyVersion]
-    UnparsedVersion = Union[Version, LegacyVersion, str]
-    CallableOperator = Callable[[ParsedVersion, str], bool]
+ParsedVersion = Union[Version, LegacyVersion]
+UnparsedVersion = Union[Version, LegacyVersion, str]
+CallableOperator = Callable[[ParsedVersion, str], bool]
 
 
 class InvalidSpecifier(ValueError):

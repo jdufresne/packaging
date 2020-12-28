@@ -5,7 +5,7 @@
 import re
 import string
 import sys
-from typing import TYPE_CHECKING
+from typing import List, Optional as TOptional, Set
 
 from pyparsing import (  # noqa: N817
     Combine,
@@ -27,10 +27,6 @@ if sys.version_info[0] >= 3:
     from urllib import parse as urlparse  # pragma: no cover
 else:  # pragma: no cover
     import urlparse
-
-
-if TYPE_CHECKING:  # pragma: no cover
-    from typing import List, Optional as TOptional, Set
 
 
 class InvalidRequirement(ValueError):
