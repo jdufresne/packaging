@@ -7,8 +7,8 @@ import functools
 import itertools
 import re
 import warnings
+from typing import TYPE_CHECKING
 
-from ._typing import TYPE_CHECKING
 from .utils import canonicalize_version
 from .version import LegacyVersion, Version, parse
 

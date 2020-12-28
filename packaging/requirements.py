@@ -5,6 +5,7 @@
 import re
 import string
 import sys
+from typing import TYPE_CHECKING
 
 from pyparsing import (  # noqa: N817
     Combine,
@@ -19,7 +20,6 @@ from pyparsing import (  # noqa: N817
     stringStart,
 )
 
-from ._typing import TYPE_CHECKING
 from .markers import MARKER_EXPR, Marker
 from .specifiers import LegacySpecifier, Specifier, SpecifierSet
 

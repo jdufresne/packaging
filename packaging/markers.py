@@ -6,6 +6,7 @@ import operator
 import os
 import platform
 import sys
+from typing import TYPE_CHECKING
 
 from pyparsing import (  # noqa: N817
     Forward,
@@ -19,7 +20,6 @@ from pyparsing import (  # noqa: N817
     stringStart,
 )
 
-from ._typing import TYPE_CHECKING
 from .specifiers import InvalidSpecifier, Specifier
 
 if TYPE_CHECKING:  # pragma: no cover

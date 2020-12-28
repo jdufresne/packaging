@@ -6,9 +6,9 @@ import collections
 import itertools
 import re
 import warnings
+from typing import TYPE_CHECKING
 
 from ._structures import Infinity, NegativeInfinity
-from ._typing import TYPE_CHECKING
 
 if TYPE_CHECKING:  # pragma: no cover
     from typing import Callable, Iterator, List, Optional, SupportsInt, Tuple, Union

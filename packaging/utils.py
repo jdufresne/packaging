@@ -3,8 +3,8 @@
 # for complete details.
 
 import re
+from typing import TYPE_CHECKING, cast
 
-from ._typing import TYPE_CHECKING, cast
 from .version import InvalidVersion, Version
 
 if TYPE_CHECKING:  # pragma: no cover

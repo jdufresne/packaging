@@ -13,8 +13,7 @@ import sys
 import sysconfig
 import warnings
 from importlib.machinery import EXTENSION_SUFFIXES
-
-from ._typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:  # pragma: no cover
     from typing import (
