@@ -12,15 +12,13 @@ NormalizedName = NewType("NormalizedName", str)
 _canonicalize_regex = re.compile(r"[-_.]+")
 
 
-def canonicalize_name(name):
-    # type: (str) -> NormalizedName
+def canonicalize_name(name: str) -> NormalizedName:
     # This is taken from PEP 503.
     value = _canonicalize_regex.sub("-", name).lower()
     return cast("NormalizedName", value)
 
 
-def canonicalize_version(version):
-    # type: (Union[Version, str]) -> Union[Version, str]
+def canonicalize_version(version: Union[Version, str]) -> Union[Version, str]:
     """
     This is very similar to Version.__str__, but has one subtle difference
     with the way it handles the release segment.

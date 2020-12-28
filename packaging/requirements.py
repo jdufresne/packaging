@@ -102,8 +102,7 @@ class Requirement:
     #       the thing as well as the version? What about the markers?
     # TODO: Can we normalize the name and extra name?
 
-    def __init__(self, requirement_string):
-        # type: (str) -> None
+    def __init__(self, requirement_string: str) -> None:
         try:
             req = REQUIREMENT.parseString(requirement_string)
         except ParseException as e:
@@ -113,7 +112,7 @@ class Requirement:
                 )
             )
 
-        self.name = req.name  # type: str
+        self.name: str = req.name
         if req.url:
             parsed_url = urlparse.urlparse(req.url)
             if parsed_url.scheme == "file":
@@ -123,16 +122,15 @@ class Requirement:
                 not parsed_url.scheme and not parsed_url.netloc
             ):
                 raise InvalidRequirement("Invalid URL: {0}".format(req.url))
-            self.url = req.url  # type: TOptional[str]
+            self.url: TOptional[str] = req.url
         else:
             self.url = None
-        self.extras = set(req.extras.asList() if req.extras else [])  # type: Set[str]
-        self.specifier = SpecifierSet(req.specifier)  # type: SpecifierSet
-        self.marker = req.marker if req.marker else None  # type: TOptional[Marker]
+        self.extras: Set[str] = set(req.extras.asList() if req.extras else [])
+        self.specifier: SpecifierSet = SpecifierSet(req.specifier)
+        self.marker: TOptional[Marker] = req.marker if req.marker else None
 
-    def __str__(self):
-        # type: () -> str
-        parts = [self.name]  # type: List[str]
+    def __str__(self) -> str:
+        parts: List[str] = [self.name]
 
         if self.extras:
             parts.append("[{0}]".format(",".join(sorted(self.extras))))
@@ -150,6 +148,5 @@ class Requirement:
 
         return "".join(parts)
 
-    def __repr__(self):
-        # type: () -> str
+    def __repr__(self) -> str:
         return "<Requirement({0!r})>".format(str(self))
