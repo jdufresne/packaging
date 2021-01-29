@@ -4,7 +4,15 @@
 
 import pytest
 
-from packaging.utils import canonicalize_name, canonicalize_version
+from packaging.tags import Tag
+from packaging.utils import (
+    InvalidSdistFilename,
+    InvalidWheelFilename,
+    canonicalize_name,
+    canonicalize_version,
+    parse_sdist_filename,
+    parse_wheel_filename,
+)
 from packaging.version import Version
 
 
@@ -46,3 +54,63 @@ def test_canonicalize_name(name, expected):
 )
 def test_canonicalize_version(version, expected):
     assert canonicalize_version(version) == expected
+
+
+@pytest.mark.parametrize(
+    ("filename", "name", "version", "build", "tags"),
+    [
+        (
+            "foo-1.0-py3-none-any.whl",
+            "foo",
+            Version("1.0"),
+            (),
+            {Tag("py3", "none", "any")},
+        ),
+        (
+            "foo-1.0-1000-py3-none-any.whl",
+            "foo",
+            Version("1.0"),
+            (1000, ""),
+            {Tag("py3", "none", "any")},
+        ),
+        (
+            "foo-1.0-1000abc-py3-none-any.whl",
+            "foo",
+            Version("1.0"),
+            (1000, "abc"),
+            {Tag("py3", "none", "any")},
+        ),
+    ],
+)
+def test_parse_wheel_filename(filename, name, version, build, tags):
+    assert parse_wheel_filename(filename) == (name, version, build, tags)
+
+
+@pytest.mark.parametrize(
+    ("filename"),
+    [
+        ("foo-1.0.whl"),  # Missing tags
+        ("foo-1.0-py3-none-any.wheel"),  # Incorrect file extension (`.wheel`)
+        ("foo__bar-1.0-py3-none-any.whl"),  # Invalid name (`__`)
+        ("foo#bar-1.0-py3-none-any.whl"),  # Invalid name (`#`)
+        # Build number doesn't start with a digit (`abc`)
+        ("foo-1.0-abc-py3-none-any.whl"),
+        ("foo-1.0-200-py3-none-any-junk.whl"),  # Too many dashes (`-junk`)
+    ],
+)
+def test_parse_wheel_invalid_filename(filename):
+    with pytest.raises(InvalidWheelFilename):
+        parse_wheel_filename(filename)
+
+
+@pytest.mark.parametrize(
+    ("filename", "name", "version"), [("foo-1.0.tar.gz", "foo", Version("1.0"))]
+)
+def test_parse_sdist_filename(filename, name, version):
+    assert parse_sdist_filename(filename) == (name, version)
+
+
+@pytest.mark.parametrize(("filename"), [("foo-1.0.zip"), ("foo1.0.tar.gz")])
+def test_parse_sdist_invalid_filename(filename):
+    with pytest.raises(InvalidSdistFilename):
+        parse_sdist_filename(filename)
